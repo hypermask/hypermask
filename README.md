@@ -1,5 +1,9 @@
 # HyperMask
 
+[![npm version](https://badge.fury.io/js/hypermask.svg)](https://badge.fury.io/js/hypermask)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
 > Home Page: https://hypermask.io/
 >
 > Live Demo (Main Net): https://hypermask.io/demo?chain=mainnet
