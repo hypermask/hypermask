@@ -16,11 +16,26 @@ When a user does an action which requires payment, HyperMask uses Coinbase's Buy
 
 Behind the scenes, HyperMask provisions a local in-browser wallet, which recieves and forwards the funds from Coinbase. The wallet's keys are kept in your browser and are never sent over the internet. This wallet is fully functional, and can be used to collect micropayments, trade tokens, and sign messages. 
 
-## Getting Started
+## Quick Start
 
 If you're developing a decentralized app powered by Ethereum's Web3 framework, integrating HyperMask can be as easy as adding six lines of code. 
 
 The entire HyperMask library is under 200 lines of Javascript, with no dependencies, so you don't have to worry about HyperMask bloating up your app. 
+
+```js
+import Web3 from 'web3'
+import withHyperMask from 'hypermask'
+
+if (typeof web3 !== 'undefined') {
+    global.web3 = new Web3(web3.currentProvider);
+} else {
+    global.web3 = new Web3(withHyperMask(new Web3.providers.HttpProvider("https://mainnet.infura.io/")));
+}
+```
+
+You can find more detailed instructions and examples in the "Getting Started" section of this README, on [CodeSandbox](https://codesandbox.io/s/81ooko0qnl), [CodePen](https://codepen.io/hypermask/pen/gvadRv/left/?editors=1010), and at the [hypermask-examples](https://github.com/hypermask/hypermask-examples) repo. 
+
+## Getting Started
 
 Just add the HyperMask dependency to your project with `npm` or `yarn`
 
@@ -34,22 +49,14 @@ Or with a plain ol' script tag:
 
 Wrap your `HttpProvider` fallback with the `withHyperMask` decorator, and everything will just work. 
 
-```js
-import Web3 from 'web3'
-import withHyperMask from 'hypermask'
 
-if (typeof web3 !== 'undefined') {
-    global.web3 = new Web3(web3.currentProvider);
-} else {
-    global.web3 = new Web3(withHyperMask(new Web3.providers.HttpProvider("https://mainnet.infura.io/")));
-}
-```
 
 Check out this simple example on [CodeSandbox](https://codesandbox.io/s/81ooko0qnl)
 
 If you're building your app in plain HTML and Javascript without a module bundler like Webpack, Browserify, or Parcel. You can use the following script tag includes:
 
 Check out this simple example on [CodePen](https://codepen.io/hypermask/pen/gvadRv/left/?editors=1010)
+
 
 ```html
 <script src="https://cdn.rawgit.com/ethereum/web3.js/1.0/dist/web3.min.js"></script>
@@ -68,7 +75,7 @@ Your app built with the [Web3 1.0 API](http://web3js.readthedocs.io/en/1.0/index
 
 ## How It Works
 
-
+![How HyperMask Works](https://hypermask.io/how-it-works.svg)
 
 ## Switching Networks
 
