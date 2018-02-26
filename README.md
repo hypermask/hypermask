@@ -1,14 +1,15 @@
 # HyperMask
 
-[![npm version](https://badge.fury.io/js/hypermask.svg)](https://badge.fury.io/js/hypermask)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
 
 > Home Page: https://hypermask.io/
 >
 > Live Demo (Main Net): https://hypermask.io/demo?chain=mainnet
 > 
 > Live Demo (Ropsten Test Net): https://hypermask.io/demo?chain=ropsten
+
+[![npm version](https://badge.fury.io/js/hypermask.svg)](https://badge.fury.io/js/hypermask)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 
 HyperMask lets users without native Web3-enabled browsers come and join the decentralized app party. With just two new lines of code all of your users can send and recieve payments, execute smart contracts, and sign messages. When a user does an action which requires payment, HyperMask uses Coinbase's Buy Widget to securely accept credit card or bank account information. HyperMask provisions a local in-browser wallet, which then recieves the Coinbase funds and then signs and broadcasts the transaction. 
 
