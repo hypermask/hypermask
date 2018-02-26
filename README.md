@@ -35,6 +35,12 @@ if (typeof web3 !== 'undefined') {
 
 You can find more detailed instructions and examples in the "Getting Started" section of this README, on [CodeSandbox](https://codesandbox.io/s/81ooko0qnl), [CodePen](https://codepen.io/hypermask/pen/gvadRv/left/?editors=1010), and at the [hypermask-examples](https://github.com/hypermask/hypermask-examples) repo. 
 
+
+## How It Works
+
+![How HyperMask Works](https://hypermask.io/how-it-works.svg)
+
+
 ## Getting Started
 
 Just add the HyperMask dependency to your project with `npm` or `yarn`
@@ -72,16 +78,17 @@ if (typeof web3 !== 'undefined') {
 
 Your app built with the [Web3 1.0 API](http://web3js.readthedocs.io/en/1.0/index.html) should then *just work*. If your browser already injects a Web3 provider (e.g. MetaMask or Toshi) HyperMask doesn't get in the way. 
 
+## Configuration
 
-## How It Works
+HyperMask automatically uses whatever network you pass in as a provider. To use the Ethereum MainNet, just use the `mainnet` INFURA JSON-RPC endpoint. To use the Ropsten testnet, just use the `ropsten` endpoint. 
 
-![How HyperMask Works](https://hypermask.io/how-it-works.svg)
+HyperMask uses the same address across all of a user's applications. That way if you earn money from one game, you can use the resulting funds in another one. 
 
-## Switching Networks
+The HyperMask client library (this project!) exposes a single function. If importing by script tag, it's accessible by `HyperMask.wrapProvider` and by NPM/Webpack/Parcel/Browserify it's accessible by `withHyperMask` (or whatever you choose to call it). 
 
-HyperMask automatically uses whatever network you pass in as a provider. To use the Ethereum MainNet, just use the `mainnet` INFURA JSON-RPC endpoint. To use the Ropsten testnet, just use the `ropsten` endpoint. HyperMask uses the same address for all chains, and across all of a user's applications. That way if you earn money from one game, you can use the resulting funds in another one.
+The first argument is a Web3 provider that you're wrapping. HyperMask intercepts all account-related methods sent to the provider, so you should not wrap the injected `web3.currentProvider` object. Instead you should wrap a public provider such as INFURA.
 
-
+`withHyperMask` has an optional second argument for the URL of the HyperMask wallet frame. By default it points to `https://hypermask.io/app`, but may be useful to override during development. 
 
 ## Security
 
