@@ -106,6 +106,8 @@ We're committed to the security of our users and developers. Users are in full c
 
 Because of our dedication to security, no less than 10% of donations will go toward starting a bug bounty program. The rest of the funds will be used to support the ongoing development of HyperMask.
 
-ETH ADDRESS HERE
+```
+ETH: 0x658AC8Dab114EE16Fba37f3c18Ad734a3542bF63
+```
 
 
