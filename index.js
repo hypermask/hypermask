@@ -1,4 +1,4 @@
-const HYPERMASK_URL = 'https://hypermask.io/app';
+const HYPERMASK_URL = 'https://app.hypermask.io/';
 
 
 class HookedProvider {
