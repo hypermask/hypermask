@@ -1,7 +1,7 @@
 {
   "name": "hypermask",
-  "version": "1.0.6",
-  "description": "use decentralized apps without installing anything",
+  "version": "1.0.7",
+  "description": "HyperMask makes it possible for anyone to use the decentralized web without installing a browser extension",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
