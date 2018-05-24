@@ -88,7 +88,7 @@ The HyperMask client library (this project!) exposes a single function. If impor
 
 The first argument is a Web3 provider that you're wrapping. HyperMask intercepts all account-related methods sent to the provider, so you should not wrap the injected `web3.currentProvider` object. Instead you should wrap a public provider such as INFURA.
 
-`withHyperMask` has an optional second argument for the URL of the HyperMask wallet frame. By default it points to `https://hypermask.io/app`, but may be useful to override during development. 
+`withHyperMask` has an optional second argument for the URL of the HyperMask wallet frame. By default it points to `https://app.hypermask.io/`, but may be useful to override during development. 
 
 ## Security
 
@@ -96,7 +96,7 @@ HyperMask maintains a local Ethereum wallet in your browser— its private keys 
 
 As your HyperMask wallet is accessible to anyone with physical access to your computer, you should not use Hypermask to hold substantial amounts of ether. Think of HyperMask's wallet as a pocket for storing loose change, rather than a bank vault for storing valuable assets. We've done our best to ensure that your funds are reasonably secure, but are not responsible for any loss. 
 
-Since HyperMask uses the same account information across websites, malicious sites may be able to use it as a cross-domain drive-by tracking cookie. This is the same behavior of MetaMask and most other Ethereum wallets. This default behavior can be changed by navigating to the Hypermask Wallet Settings page at https://hypermask.io/app (for mainnet) or https://hypermask.io/app/?chain=ropsten (for ropsten testnet) and enabling "Require approval before sharing identity with decentralized apps". 
+Since HyperMask uses the same account information across websites, malicious sites may be able to use it as a cross-domain drive-by tracking cookie. This is the same behavior of MetaMask and most other Ethereum wallets. This default behavior can be changed by navigating to the Hypermask Wallet Settings page at https://app.hypermask.io (for mainnet) or https://app.hypermask.io/?chain=ropsten (for ropsten testnet) and enabling "Require approval before sharing identity with decentralized apps". 
 
 By default, HyperMask collects anonymous usage statistics using Google Analytics. Likewise there is a setting in the wallet settings page which completely disables the use of Google Analytics.
 
