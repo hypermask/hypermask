@@ -1,7 +1,7 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/preset-env",
       {
         "targets": {
           "browsers": [
@@ -16,9 +16,9 @@
     ]
   ],
   "plugins": [
-    "fast-async",
+    "module:fast-async",
     [
-      "transform-es2015-modules-umd",
+      "@babel/transform-modules-umd",
       {
         "globals": {
           "hypermask": "HyperMask"
