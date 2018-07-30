@@ -8,5 +8,12 @@
     "build": "babel index.js -o dist/index.js"
   },
   "author": "Hypermask Team <team@hypermask.io>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.49",
+    "@babel/core": "^7.0.0-beta.49",
+    "@babel/plugin-transform-modules-umd": "^7.0.0-beta.49",
+    "@babel/preset-env": "^7.0.0-beta.49",
+    "fast-async": "7"
+  }
 }

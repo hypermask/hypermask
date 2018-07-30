@@ -1,0 +1,31 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "browsers": [
+            "> 1%"
+          ]
+        },
+        "exclude": [
+          "transform-regenerator",
+          "transform-async-to-generator"
+        ]
+      }
+    ]
+  ],
+  "plugins": [
+    "module:fast-async",
+    [
+      "@babel/transform-modules-umd",
+      {
+        "globals": {
+          "hypermask": "HyperMask"
+        },
+        "exactGlobals": true
+      }
+    ]
+  ],
+  "moduleId": "hypermask"
+}
