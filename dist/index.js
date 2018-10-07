@@ -163,16 +163,23 @@
       key: "initializeFrame",
       value: function initializeFrame() {
         return new Promise(function ($return, $error) {
-          var _this4, stopSpinner, chain, channel;
+          var _this4, channel, stopSpinner, chain;
 
           _this4 = this;
+
+          // initializeFrame is idempotent, so it does not act if the
+          // frame has already been initialized
+          if (this._hyperMaskFrame || this._hyperMaskModal) {
+            return $return();
+          }
+
+          channel = "hm" + (Date.now() * 1000 + Math.floor(Math.random() * 1000));
+          this._channel = channel;
+          this._hyperMaskFrame = document.createElement("iframe");
           stopSpinner = createHyperMaskSpinner();
-          return Promise.resolve(this._provider_rpc("net_version")).then(function ($await_4) {
+          return Promise.resolve(this._provider_rpc("net_version")).then(function ($await_3) {
             try {
-              chain = $await_4;
-              channel = "hm" + (Date.now() * 1000 + Math.floor(Math.random() * 1000));
-              this._channel = channel;
-              this._hyperMaskFrame = document.createElement("iframe");
+              chain = $await_3;
               this._hyperMaskFrame.src = this._hyperMaskURL + (this._hyperMaskURL.indexOf("?") == -1 ? "?" : "&") + "channel=" + channel + "&chain=" + chain + "&origin=" + encodeURIComponent(window.location.origin);
               this._hyperMaskModal = document.createElement("div");
               this._hyperMaskModal.className = "hypermask_modal";
@@ -225,7 +232,7 @@
               return Promise.resolve(new Promise(function (resolve, reject) {
                 _this4._hyperMaskFrame.onload = resolve;
                 _this4._hyperMaskFrame.onerror = reject;
-              })).then(function ($await_5) {
+              })).then(function ($await_4) {
                 try {
                   stopSpinner();
                   return $return();
@@ -269,32 +276,24 @@
             params[_key2 - 1] = $args[_key2];
           }
 
-          if (!this._hyperMaskFrame || !this._hyperMaskModal) {
-            return Promise.resolve(this.initializeFrame()).then(function ($await_6) {
-              try {
-                return $If_3.call(this);
-              } catch ($boundEx) {
-                return $error($boundEx);
-              }
-            }.bind(this), $error);
-          }
+          return Promise.resolve(this.initializeFrame()).then(function ($await_5) {
+            try {
+              msg = {
+                app: "hypermask-call",
+                id: Date.now() * 1000 + Math.floor(Math.random() * 1000),
+                method: method,
+                params: params
+              };
 
-          function $If_3() {
-            msg = {
-              app: "hypermask-call",
-              id: Date.now() * 1000 + Math.floor(Math.random() * 1000),
-              method: method,
-              params: params
-            };
+              this._hyperMaskFrame.contentWindow.postMessage(msg, this._hyperMaskOrigin);
 
-            this._hyperMaskFrame.contentWindow.postMessage(msg, this._hyperMaskOrigin);
-
-            return Promise.resolve(new Promise(function (resolve, reject) {
-              _this5._rpcHandlers[msg.id] = [resolve, reject];
-            })).then($return, $error);
-          }
-
-          return $If_3.call(this);
+              return Promise.resolve(new Promise(function (resolve, reject) {
+                _this5._rpcHandlers[msg.id] = [resolve, reject];
+              })).then($return, $error);
+            } catch ($boundEx) {
+              return $error($boundEx);
+            }
+          }.bind(this), $error);
         }.bind(this));
       }
     }]);
@@ -324,7 +323,7 @@
         this._hyperMaskModal.style.animationName = "hypermask-exit-animation";
         return Promise.resolve(new Promise(function (resolve) {
           return setTimeout(resolve, 500);
-        })).then(function ($await_8) {
+        })).then(function ($await_7) {
           try {
             this._hyperMaskModal.style.display = "none";
             return $return();
@@ -351,9 +350,9 @@
     // override eth_coinbase to return the first result of eth_accounts
     eth_coinbase: function eth_coinbase() {
       return new Promise(function ($return, $error) {
-        return Promise.resolve(this._provider_rpc("eth_accounts")).then(function ($await_10) {
+        return Promise.resolve(this._provider_rpc("eth_accounts")).then(function ($await_9) {
           try {
-            return $return($await_10[0]);
+            return $return($await_9[0]);
           } catch ($boundEx) {
             return $error($boundEx);
           }
