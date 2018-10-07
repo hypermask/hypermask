@@ -78,13 +78,19 @@ class HyperMaskProvider extends HookedProvider {
   }
 
   async initializeFrame() {
+    // initializeFrame is idempotent, so it does not act if the
+    // frame has already been initialized
+    if (this._hyperMaskFrame || this._hyperMaskModal) {
+      return;
+    }
+
+    let channel = "hm" + (Date.now() * 1000 + Math.floor(Math.random() * 1000));
+    this._channel = channel;
+    this._hyperMaskFrame = document.createElement("iframe");
+    
     let stopSpinner = createHyperMaskSpinner();
 
     let chain = await this._provider_rpc("net_version");
-    let channel = "hm" + (Date.now() * 1000 + Math.floor(Math.random() * 1000));
-    this._channel = channel;
-
-    this._hyperMaskFrame = document.createElement("iframe");
     this._hyperMaskFrame.src =
       this._hyperMaskURL +
       (this._hyperMaskURL.indexOf("?") == -1 ? "?" : "&") +
@@ -172,9 +178,7 @@ class HyperMaskProvider extends HookedProvider {
   }
 
   async _hyper_rpc(method, ...params) {
-    if (!this._hyperMaskFrame || !this._hyperMaskModal) {
-      await this.initializeFrame();
-    }
+    await this.initializeFrame();
     let msg = {
       app: "hypermask-call",
       id: Date.now() * 1000 + Math.floor(Math.random() * 1000),
