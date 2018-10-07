@@ -1,6 +1,6 @@
 {
   "name": "hypermask",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "HyperMask makes it possible for anyone to use the decentralized web without installing a browser extension",
   "homepage": "https://github.com/hypermask/hypermask",
   "main": "dist/index.js",

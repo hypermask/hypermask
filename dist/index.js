@@ -163,23 +163,31 @@
       key: "initializeFrame",
       value: function initializeFrame() {
         return new Promise(function ($return, $error) {
-          var _this4, channel, stopSpinner, chain;
-
-          _this4 = this;
-
           // initializeFrame is idempotent, so it does not act if the
           // frame has already been initialized
-          if (this._hyperMaskFrame || this._hyperMaskModal) {
-            return $return();
+          if (this._framePromise) {
+            return Promise.resolve(this._framePromise).then($return, $error);
+          } else {
+            return Promise.resolve(this._framePromise = this._initializeFrame()).then($return, $error);
           }
 
+          return $return();
+        }.bind(this));
+      }
+    }, {
+      key: "_initializeFrame",
+      value: function _initializeFrame() {
+        return new Promise(function ($return, $error) {
+          var _this4, stopSpinner, channel, chain;
+
+          _this4 = this;
+          stopSpinner = createHyperMaskSpinner();
           channel = "hm" + (Date.now() * 1000 + Math.floor(Math.random() * 1000));
           this._channel = channel;
           this._hyperMaskFrame = document.createElement("iframe");
-          stopSpinner = createHyperMaskSpinner();
-          return Promise.resolve(this._provider_rpc("net_version")).then(function ($await_3) {
+          return Promise.resolve(this._provider_rpc("net_version")).then(function ($await_6) {
             try {
-              chain = $await_3;
+              chain = $await_6;
               this._hyperMaskFrame.src = this._hyperMaskURL + (this._hyperMaskURL.indexOf("?") == -1 ? "?" : "&") + "channel=" + channel + "&chain=" + chain + "&origin=" + encodeURIComponent(window.location.origin);
               this._hyperMaskModal = document.createElement("div");
               this._hyperMaskModal.className = "hypermask_modal";
@@ -232,7 +240,7 @@
               return Promise.resolve(new Promise(function (resolve, reject) {
                 _this4._hyperMaskFrame.onload = resolve;
                 _this4._hyperMaskFrame.onerror = reject;
-              })).then(function ($await_4) {
+              })).then(function ($await_7) {
                 try {
                   stopSpinner();
                   return $return();
@@ -276,7 +284,7 @@
             params[_key2 - 1] = $args[_key2];
           }
 
-          return Promise.resolve(this.initializeFrame()).then(function ($await_5) {
+          return Promise.resolve(this.initializeFrame()).then(function ($await_8) {
             try {
               msg = {
                 app: "hypermask-call",
@@ -323,7 +331,7 @@
         this._hyperMaskModal.style.animationName = "hypermask-exit-animation";
         return Promise.resolve(new Promise(function (resolve) {
           return setTimeout(resolve, 500);
-        })).then(function ($await_7) {
+        })).then(function ($await_10) {
           try {
             this._hyperMaskModal.style.display = "none";
             return $return();
@@ -350,9 +358,9 @@
     // override eth_coinbase to return the first result of eth_accounts
     eth_coinbase: function eth_coinbase() {
       return new Promise(function ($return, $error) {
-        return Promise.resolve(this._provider_rpc("eth_accounts")).then(function ($await_9) {
+        return Promise.resolve(this._provider_rpc("eth_accounts")).then(function ($await_12) {
           try {
-            return $return($await_9[0]);
+            return $return($await_12[0]);
           } catch ($boundEx) {
             return $error($boundEx);
           }
