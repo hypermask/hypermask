@@ -5,36 +5,37 @@ class HookedProvider {
     this.baseProvider = base;
     this.overrides = overrides;
     for (let method in base) {
-      if (typeof base[method] === "function" && method[0] != "_") {
+      if (typeof base[method] === "function" && method[0] != "_" && method !== 'send' && method !== 'sendAsync') {
         this[method] = function() {
-          if (method === "send") {
-            let payload = arguments[0],
-              callback = arguments[1],
-              intercept_callback =
-                typeof callback === "function"
-                  ? function(err, res) {
-                      if (!err && res.error) return callback(new Error(res.error.message), null);
-                      callback(err, res);
-                    }
-                  : callback;
-            if (this.overrides[payload.method]) {
-              return this.overrides[payload.method]
-                .apply(this, payload.params)
-                .then(result =>
-                  intercept_callback(null, {
-                    jsonrpc: "2.0",
-                    id: payload.id,
-                    result: result
-                  })
-                )
-                .catch(error => intercept_callback(error, null));
-            } else {
-              return this.baseProvider.send(payload, intercept_callback);
-            }
-          }
           return this.baseProvider[method].apply(this.baseProvider, arguments);
         };
       }
+    }
+  }
+
+  send(payload, callback){
+    let intercept_callback =
+        typeof callback === "function"
+          ? function(err, res) {
+              if (!err && res.error) return callback(new Error(res.error.message), null);
+              callback(err, res);
+            }
+          : callback;
+    if (this.overrides[payload.method]) {
+      return this.overrides[payload.method]
+        .apply(this, payload.params)
+        .then(result =>
+          intercept_callback(null, {
+            jsonrpc: "2.0",
+            id: payload.id,
+            result: result
+          })
+        )
+        .catch(error => intercept_callback(error, null));
+    } else if(this.baseProvider.sendAsync){
+      return this.baseProvider.sendAsync(payload, intercept_callback);
+    }else{
+      return this.baseProvider.send(payload, intercept_callback);
     }
   }
 
