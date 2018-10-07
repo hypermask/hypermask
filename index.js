@@ -80,16 +80,18 @@ class HyperMaskProvider extends HookedProvider {
   async initializeFrame() {
     // initializeFrame is idempotent, so it does not act if the
     // frame has already been initialized
-    if (this._hyperMaskFrame || this._hyperMaskModal) {
-      return;
+    if(this._framePromise){
+      return await this._framePromise
+    }else{
+      return await (this._framePromise = this._initializeFrame())
     }
+  }
 
+  async _initializeFrame() {
+    let stopSpinner = createHyperMaskSpinner();
     let channel = "hm" + (Date.now() * 1000 + Math.floor(Math.random() * 1000));
     this._channel = channel;
     this._hyperMaskFrame = document.createElement("iframe");
-    
-    let stopSpinner = createHyperMaskSpinner();
-
     let chain = await this._provider_rpc("net_version");
     this._hyperMaskFrame.src =
       this._hyperMaskURL +
