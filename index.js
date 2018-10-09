@@ -1,4 +1,6 @@
-const HYPERMASK_URL = "https://app.hypermask.io/";
+const HYPERMASK_CONFIG = {
+  url: "https://app.hypermask.io/"
+}
 
 class HookedProvider {
   constructor(base, overrides = {}) {
@@ -59,14 +61,19 @@ class HookedProvider {
 }
 
 class HyperMaskProvider extends HookedProvider {
-  constructor(base, overrides = {}, rpcMethods, hyperMaskURL) {
+  constructor(base, overrides = {}, rpcMethods, config) {
     super(base, overrides);
     this.isHyperMask = true;
     this._rpcMethods = rpcMethods;
+    
+    config = { ...HYPERMASK_CONFIG, ...(typeof config === 'string' ? 
+        { url: config } : (config || {})) }
+
     let link = document.createElement("a");
-    link.href = hyperMaskURL;
-    this._hyperMaskURL = hyperMaskURL;
+    link.href = config.url;
+    this._hyperMaskURL = config.url;
     this._hyperMaskOrigin = link.origin;
+    this._hyperMaskConfig = config
 
     this._rpcHandlers = {};
     this._channel = null;
@@ -101,7 +108,8 @@ class HyperMaskProvider extends HookedProvider {
       "&chain=" +
       chain +
       "&origin=" +
-      encodeURIComponent(window.location.origin);
+      encodeURIComponent(window.location.origin) +
+      "&config=" + encodeURIComponent(JSON.stringify(this._hyperMaskConfig));
 
     this._hyperMaskModal = document.createElement("div");
     this._hyperMaskModal.className = "hypermask_modal";
@@ -236,8 +244,8 @@ const providerHooks = {
   }
 };
 
-export default function withHyperMask(provider, hyperMaskURL = HYPERMASK_URL) {
-  return new HyperMaskProvider(provider, providerHooks, rpcMethods, hyperMaskURL);
+export default function withHyperMask(provider, hyperMaskConfig = null) {
+  return new HyperMaskProvider(provider, providerHooks, rpcMethods, hyperMaskConfig);
 }
 
 export const wrapProvider = withHyperMask;
