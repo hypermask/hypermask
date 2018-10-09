@@ -29,6 +29,10 @@
 
   function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+  function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+  function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
   function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
   function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -45,7 +49,9 @@
 
   function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-  var HYPERMASK_URL = "https://app.hypermask.io/";
+  var HYPERMASK_CONFIG = {
+    url: "https://app.hypermask.io/"
+  };
 
   var HookedProvider =
   /*#__PURE__*/
@@ -137,17 +143,21 @@
 
       var overrides = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var rpcMethods = arguments.length > 2 ? arguments[2] : undefined;
-      var hyperMaskURL = arguments.length > 3 ? arguments[3] : undefined;
+      var config = arguments.length > 3 ? arguments[3] : undefined;
 
       _classCallCheck(this, HyperMaskProvider);
 
       _this3 = _possibleConstructorReturn(this, _getPrototypeOf(HyperMaskProvider).call(this, base, overrides));
       _this3.isHyperMask = true;
       _this3._rpcMethods = rpcMethods;
+      config = _objectSpread({}, HYPERMASK_CONFIG, typeof config === 'string' ? {
+        url: config
+      } : config || {});
       var link = document.createElement("a");
-      link.href = hyperMaskURL;
-      _this3._hyperMaskURL = hyperMaskURL;
+      link.href = config.url;
+      _this3._hyperMaskURL = config.url;
       _this3._hyperMaskOrigin = link.origin;
+      _this3._hyperMaskConfig = config;
       _this3._rpcHandlers = {};
       _this3._channel = null;
       _this3._hyperMaskFrame = null;
@@ -188,7 +198,7 @@
           return Promise.resolve(this._provider_rpc("net_version")).then(function ($await_6) {
             try {
               chain = $await_6;
-              this._hyperMaskFrame.src = this._hyperMaskURL + (this._hyperMaskURL.indexOf("?") == -1 ? "?" : "&") + "channel=" + channel + "&chain=" + chain + "&origin=" + encodeURIComponent(window.location.origin);
+              this._hyperMaskFrame.src = this._hyperMaskURL + (this._hyperMaskURL.indexOf("?") == -1 ? "?" : "&") + "channel=" + channel + "&chain=" + chain + "&origin=" + encodeURIComponent(window.location.origin) + "&config=" + encodeURIComponent(JSON.stringify(this._hyperMaskConfig));
               this._hyperMaskModal = document.createElement("div");
               this._hyperMaskModal.className = "hypermask_modal";
 
@@ -398,8 +408,8 @@
   };
 
   function withHyperMask(provider) {
-    var hyperMaskURL = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : HYPERMASK_URL;
-    return new HyperMaskProvider(provider, providerHooks, rpcMethods, hyperMaskURL);
+    var hyperMaskConfig = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    return new HyperMaskProvider(provider, providerHooks, rpcMethods, hyperMaskConfig);
   }
 
   var wrapProvider = withHyperMask;
